@@ -8,7 +8,6 @@ if [ ! -e "$ZSH_DONE" ]; then
 	apt-get install -y zsh
 	sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 	chsh -s /usr/bin/zsh $USER
-	zsh
 	sed -i "s/robbyrussell/agnoster/g" ~/.zshrc
 	touch $ZSH_DONE
 fi
