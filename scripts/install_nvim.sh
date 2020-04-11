@@ -24,7 +24,7 @@ if [ ! -e "$NVIM_DONE" ]; then
 	apt-get install -y pylint
     mkdir -p ~/.config/nvim/autoload
     ln -s $BASE_DIR/../config/nvim/init.vim ~/.config/nvim/init.vim
-    ln -s $BASE_DIR/../config/nvim/coc-settings ~/.config/nvim/coc-settings.json
+    ln -s $BASE_DIR/../config/nvim/coc-settings.json ~/.config/nvim/coc-settings.json
     wget -P ~/.config/nvim/autoload https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     vim -c PlugInstall
 	echo "Please using CocInstall to install coc-json coc-python coc-highlight coc-lists"
