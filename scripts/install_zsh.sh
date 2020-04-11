@@ -9,6 +9,6 @@ if [ ! -e "$ZSH_DONE" ]; then
 	sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 	chsh -s /usr/bin/zsh $USER
 	sed -i "s/robbyrussell/agnoster/g" ~/.zshrc
-	alias tmux="TERM=xterm-256color tmux -2"
+	alias tmux=\"TERM=xterm-256color tmux -2\" >> ~/.zshrc
 	touch $ZSH_DONE
 fi
