@@ -18,13 +18,18 @@ if [ ! -e "$NVIM_DONE" ]; then
 	apt-get install -y exuberant-ctags
 	bash -c "$(wget install-node.now.sh/lts -O -)"
     pip3 install msgpack --upgrade --user
-    pip3 install jedi flask8 pynvim --upgrade --user
+    pip3 install jedi flake8 pynvim --upgrade --user
 	apt-get install -y clang-format
 	apt-get install -y python-autopep8
     mkdir -p ~/.config/nvim/autoload
     ln -s $BASE_DIR/../config/nvim/init.vim ~/.config/nvim/init.vim
+    ln -s $BASE_DIR/../config/nvim/coc-settings ~/.config/nvim/coc-settings.json
     wget -P ~/.config/nvim/autoload https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     vim -c PlugInstall
+    vim -c CocInstall coc-json
+    vim -c CocInstall coc-python
+    vim -c CocInstall coc-highlight
+    vim -c CocInstall coc-lists
     touch $NVIM_DONE
 fi
 
