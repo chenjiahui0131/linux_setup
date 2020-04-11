@@ -15,8 +15,12 @@ if [ ! -e "$NVIM_DONE" ]; then
     update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
     update-alternatives --config editor
 
+	apt-get install -y exuberant-ctags
+	bash -c "$(wget install-node.now.sh/lts -O -)"
     pip3 install msgpack --upgrade --user
-    pip3 install pynvim --upgrade --user
+    pip3 install jedi flask8 pynvim --upgrade --user
+	apt-get install -y clang-format
+	apt-get install -y python-autopep8
     mkdir -p ~/.config/nvim/autoload
     ln -s $BASE_DIR/../config/nvim/init.vim ~/.config/nvim/init.vim
     wget -P ~/.config/nvim/autoload https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim

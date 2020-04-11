@@ -1,67 +1,43 @@
-let g:python_host_prog='usr/bin/python3'
-set nocompatible
+let g:python_host_prog='/usr/bin/python3'
 
-syntax on                                                           "语法高亮
+set nocompatible
 filetype off
 
-set number                                                          "显示行号
-set tabstop=4                                                       "tab宽度
-set shiftwidth=4                                                    "对齐宽度
-set softtabstop=4                                                   "设置软制表符的宽度
-set expandtab                                                       "使用空格替换tab
-set autoindent                                                      "自动缩进
-set smartindent                                                     "自动缩进
-set clipboard+=unnamed                                              "与系统共享剪切板
-set ignorecase                                                      "搜索模式里忽略大小写
-set smartcase                                                       "如果搜索模式包含大写字符，不使用 'ignorecase' 选项。
-set cursorline                                                      "选中行高亮
-set so=10                                                           "最少显示行数
-set modeline
-set showmatch
-set matchtime=0
-set nobackup
-set nowritebackup
-set fenc=utf-8
-set fencs=utf-8,gbk,gb18030,gb2312,cp936,usc-bom,euc-jp
-set enc=utf-8
-set hlsearch
-set incsearch
-set autochdir
-
-if has('nvim')
-   set ttimeout
-   set ttimeoutlen=0
-endif
-
 call plug#begin("~/.config/nvim/bundle")
-
-"" Plugin List                                                                                                                          
-Plug 'rking/ag.vim'
-Plug 'Yggdroot/indentLine'
-Plug 'Valloric/MatchTagAlways'
+" Plugin List
 Plug 'bigeagle/molokai'
-Plug 'bling/vim-airline'
+" 显示(空格)缩进
+Plug 'Yggdroot/indentLine'
+" 文件列表
 Plug 'scrooloose/nerdtree'
+" 底部状态栏
+Plug 'itchyny/lightline.vim'
 
+" 结构列表
 Plug 'majutsushi/tagbar'
+" 标签匹配
+Plug 'Valloric/MatchTagAlways'
+" 多处高亮
 Plug 'jrosiek/vim-mark'
+" 彩虹括号
 Plug 'kien/rainbow_parentheses.vim'
-Plug 'mattn/emmet-vim'
-Plug 'hdima/python-syntax'
-Plug 'hynek/vim-python-pep8-indent'
-Plug 'zaiste/tmux.vim'
-Plug 'lepture/vim-jinja'
-Plug 'cespare/vim-toml'
-Plug 'isRuslan/vim-es6'
 
-Plug 'w0rp/ale'
-Plug 'junegunn/fzf'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'zchee/deoplete-jedi'
-Plug 'Shougo/echodoc.vim'
-Plug 'davidhalter/jedi-vim'
+" Python语法高亮
+Plug 'hdima/python-syntax'
+" Python缩进
+Plug 'hynek/vim-python-pep8-indent'
+
+" 自动补全
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc-json', {'do': 'npm install --frozen-lockfile'}
+" Plug 'neoclide/coc-python', {'do': 'npm install --frozen-lockfile'}
+" Plug 'neoclide/coc-highlight', {'do': 'npm install --frozen-lockfile'}
+" Plug 'neoclide/coc-lists', {'do': 'npm install --frozen-lockfile'}
+
+" 格式化
 Plug 'Chiel92/vim-autoformat'
 call plug#end()
+
 
 " UI
 if !exists("g:vimrc_loaded")
@@ -72,6 +48,9 @@ if !exists("g:vimrc_loaded")
 	colorscheme molokai
 endif " exists(...)
 
+set so=10
+set number
+syntax on
 filetype on
 filetype plugin on
 filetype indent on
@@ -93,10 +72,33 @@ if has('mouse')
     set nomousehide
 endif
 
+set autoindent
+set modeline
+set cursorline
+"set cursorcolumn
+
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+
+set showmatch
+set matchtime=0
+set nobackup
+set nowritebackup
+set directory=/tmp/.swapfiles//
+
+if has('nvim')
+   set ttimeout
+   set ttimeoutlen=0
+endif
+
 "在insert模式下能用删除键进行删除
 set backspace=indent,eol,start
 
-"按缩进或手动折叠
+set fenc=utf-8
+set fencs=utf-8,gbk,gb18030,gb2312,cp936,usc-bom,euc-jp
+set enc=utf-8
+
 augroup vimrc
   au BufReadPre * setlocal foldmethod=indent
   au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
@@ -108,14 +110,27 @@ set foldlevel=200  " disable auto folding
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 vnoremap <Space> zf
 
+set smartcase
+set ignorecase
+set nohlsearch
+set incsearch
+set autochdir
+
+vmap j gj
+vmap k gk
+nmap j gj
+nmap k gk
+
 nmap T :tabnew<cr>
+
+au FileType c,cpp,h,java,css,js,nginx,scala,go inoremap  <buffer>  {<CR> {<CR>}<Esc>O
 
 au BufNewFile *.py call ScriptHeader()
 au BufNewFile *.sh call ScriptHeader()
 
 function ScriptHeader()
     if &filetype == 'python'
-        let header = "#!/usr/bin/env python3"
+        let header = "#!/usr/bin/ python3"
         let cfg = "# vim: ts=4 sw=4 sts=4 expandtab"
     elseif &filetype == 'sh'
         let header = "#!/bin/bash"
@@ -132,73 +147,65 @@ function ScriptHeader()
     normal ''
 endfunction
 
-" --- Plugin Configs ---------
-let g:tagbar_width = 30
-nmap tb :TagbarToggle<cr>
-
-let g:localvimrc_ask=0
-let g:localvimrc_sandbox=0
-
-au FileType json setlocal conceallevel=0
+" IndentLine Config -------------------
+" json下禁用设置
+autocmd Filetype json let g:indentLine_enabled = 0
 let g:vim_json_syntax_conceal = 0
 let g:indentLine_noConcealCursor=""
+" -------------------------------------
 
-" - Airline -------------------
-set noshowmode
-set laststatus=2
-let g:airline#extensions#tabline#enabled = 0
-let g:airline_powerline_fonts = 1
-" ----------------------------
-
-" Deoplete and echodoc
-set noshowmode
-let g:echodoc#enable_at_startup = 1
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#disable_auto_complete = 0
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#sources#jedi#python_path = "/usr/bin/python3.6"
-let g:deoplete#sources#jedi#extra_path = split($PYTHONPATH, ":")
-
-let g:deoplete#sources = {}
-let g:deoplete#sources.python = ['jedi']
- 
-inoremap <silent><expr> <C-x><C-o> deoplete#mappings#manual_complete("jedi")
-inoremap <expr> <C-o> pumvisible() ? "\<C-n>" : "\<C-o>"
-" ----------------------------
-
-" - NerdTree -----------------
+" NerdTree Config ---------------------
 nmap nt :NERDTreeToggle<cr>
+
+" Tells the NERDTree whether to display the
+" bookmarks table on startup.
 let NERDTreeShowBookmarks=0
+" If set to 1 then a double click on a node is required to open it.
+" If set to 2 then a single click will open directory nodes, while
+" a double click will still be required for file nodes.
+" If set to 3 then a single click will open any node.
 let NERDTreeMouseMode=2
-
+" Sets the window size when the NERDTree is opened.
 let NERDTreeWinSize=25
+" Tells the NERDTree which files to ignore.
 let NERDTreeIgnore = ['\.pyc$']
+" Disables display of the 'Bookmarks' label and 'Press ? for help' text.
 let NERDTreeMinimalUI=0
-let NERDTreeDirArrows=1
-" ----------------------------
+" -------------------------------------
 
-" - python and jedi ----------
-let python_highlight_all = 1
-autocmd BufWritePre *.py :%s/\s\+$//e
-"au FileType python setlocal cc=80
+" LightLine Config --------------------
+" 不显示输入模式(与状态栏信息冗余)
+set noshowmode
+" 防止状态栏显示异常
+set laststatus=2
+" 设置状态栏内容
+let g:lightline = {
+	\   'active': {
+	\     'left':[ [ 'mode', 'paste' ],
+	\              [ 'cocstatus', 'readonly', 'filename', 'modified' ]
+	\     ]
+	\   },
+	\   'component': {
+	\     'lineinfo': ' %3l:%-2v',
+	\   },
+	\ 'component_function': {
+	\   'cocstatus': 'coc#status',
+	\ },
+	\ }
+let g:lightline.separator = {
+	\   'left': '', 'right': ''
+	\}
+let g:lightline.subseparator = {
+	\   'left': '', 'right': '' 
+	\}
+" -------------------------------------
 
-let g:jedi#force_py_version=3
-let g:jedi#auto_vim_configuration = 0
-let g:jedi#popup_on_dot = 0
-let g:jedi#use_tabs_not_buffers = 1
-let g:jedi#smart_auto_mappings = 0
-let g:jedi#show_call_signatures = "0"
-let g:jedi#completions_command = ""
-let g:jedi#rename_command = "<leader>r"
-let g:jedi#goto_command = "<leader>g"
-let g:jedi#goto_assignments_command = ""
-let g:jedi#goto_definitions_command = ""
-let g:jedi#usages_command = "<leader>u"
-let g:jedi#show_call_signatures_delay = 100
-let g:jedi#completions_enabled = 0
-" ----------------------------
+" Tag Bar Config ----------------------
+let g:tagbar_width = 30
+nmap tb :TagbarToggle<cr>
+" -------------------------------------
 
-" - rainbow_parentheses ------
+" Rainbow Parentheses Config ----------
 let g:rbpt_colorpairs = [
 	\ [158, '#00ceb3'],
 	\ [081, '#00a3ff'],
@@ -217,25 +224,91 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax c,cpp,go,h,java,python,javascript,scala,coffee RainbowParenthesesLoadSquare
 au Syntax c,cpp,go,h,java,python,javascript,scala,coffee,scss  RainbowParenthesesLoadBraces
-" ----------------------------
+" --------------------------------------
 
-" - ALE ---------------------
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_enter = 1
+" Python Syntax Config -----------------
+let python_highlight_all = 1
+" --------------------------------------
 
-let g:airline#extensions#ale#enabled = 1
+" CoC Config ---------------------------
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
 
-let g:ale_linters = {
-\   'python': ['flake8'],
-\}
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
 
-let g:ale_sign_error = '✗'
-let g:ale_sign_warning = '⚠'
-let g:ale_python_flake8_options = "--ignore=E501,F401,E226,E741"
-" ---------------------------
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
 
-" Load local config if exists
-if filereadable(expand("~/.config/nvim/local.vim"))
-	source ~/.vim/config/local.vim
-endif
+set completeopt=noinsert,menuone,noselect
+
+let g:coc_auto_copen=1
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+" Use <C-j> for both expand and jump (make expand higher priority.)
+
+" Use <cr> to confirm completion
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Use <c-space> to trigger completion
+inoremap <silent><expr> <leader><space> coc#refresh()
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    else
+        call CocAction('doHover')
+    endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Update signature help on jump placeholder.
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+
+highlight CocErrorSign ctermfg=215 guifg=#ffaf5f
+highlight default CocHighlightText guibg=#767676 ctermbg=243 cterm=underline
+" --------------------------------------
+
+" Auto Format Config -------------------
+noremap <silent> <F3> :Autoformat<CR>
+" --------------------------------------
+
+" Python Config ------------------------
+" 删除行末多余字符
+autocmd BufWritePre *.py :%s/\s\+$//e
+au FileType python setlocal cc=80
+" --------------------------------------
