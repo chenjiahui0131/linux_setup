@@ -22,6 +22,7 @@ if [ ! -e "$NVIM_DONE" ]; then
 	apt-get install -y clang-format
 	apt-get install -y python-autopep8
 	apt-get install -y pylint
+	pip3 install 'python-language-server[all]' --upgrade --user
     mkdir -p ~/.config/nvim/autoload
     ln -s $BASE_DIR/../config/nvim/init.vim ~/.config/nvim/init.vim
     ln -s $BASE_DIR/../config/nvim/coc-settings.json ~/.config/nvim/coc-settings.json
