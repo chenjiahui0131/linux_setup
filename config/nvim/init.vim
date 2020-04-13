@@ -37,7 +37,12 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " 格式化
 Plug 'Chiel92/vim-autoformat'
+
+" 注释
+Plug 'preservim/nerdcommenter'
+
 call plug#end()
+
 
 
 " UI
@@ -306,6 +311,11 @@ highlight default CocHighlightText guibg=#767676 ctermbg=243 cterm=underline
 
 " Auto Format Config -------------------
 noremap <silent> <F3> :Autoformat<CR>
+" --------------------------------------
+
+" Nerd Commentor Config ----------------
+nmap // <leader>c<space>
+vmap // <leader>c<space>
 " --------------------------------------
 
 " Python Config ------------------------
