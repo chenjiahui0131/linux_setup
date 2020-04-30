@@ -27,6 +27,8 @@ Plug 'kien/rainbow_parentheses.vim'
 Plug 'hdima/python-syntax'
 " Python缩进
 Plug 'hynek/vim-python-pep8-indent'
+" CXX语法高亮
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 " 自动补全
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -136,7 +138,7 @@ au BufNewFile *.sh call ScriptHeader()
 
 function ScriptHeader()
     if &filetype == 'python'
-        let header = "#!/usr/bin/ python3"
+        let header = "#!/usr/bin/env python3"
         let cfg = "# vim: ts=4 sw=4 sts=4 expandtab"
     elseif &filetype == 'sh'
         let header = "#!/bin/bash"

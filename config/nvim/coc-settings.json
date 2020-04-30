@@ -40,14 +40,15 @@
   "python.linting.pylintEnabled": false,
 
   "languageserver": {
-    // "ccls": {
-    //   "command": "ccls",
-    //   "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
-    //   "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-    //   "initializationOptions": {
-    //      "cacheDirectory": ".ccls-cache"
-    //    }
-    // }
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+      "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+      "initializationOptions": {
+         "cacheDirectory": ".ccls-cache",
+         "highlight": { "lsRanges" : true }
+       }
+    }
   }
 
 }
