@@ -36,7 +36,7 @@
   "python.autoComplete.addBrackets": false,
   "python.linting.enabled": true,
   "python.linting.flake8Enabled": true,
-  "python.linting.flake8Args": ["--ignore=E501,F401,E226,E741,W191"],
+  "python.linting.flake8Args": ["--ignore=E501,E226,E741"],
   "python.linting.pylintEnabled": false,
 
   "languageserver": {
